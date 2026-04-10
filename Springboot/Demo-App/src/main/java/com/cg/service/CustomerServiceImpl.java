@@ -1,7 +1,6 @@
 package com.cg.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import com.cg.dto.CustomerDTO;
 import com.cg.entity.Customer;
 import com.cg.exception.CustomerNotFoundException;
 import com.cg.repository.CustomerRepo;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -26,9 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerDTO> getAllCustomers() {
-		List<Customer> allCustomers = customerRepo.findAll();
-		return allCustomers.stream().map(customer -> modelMapper.map(customer, CustomerDTO.class))
-				.collect(Collectors.toList());
+		return customerRepo.findAll().stream().map(customer -> modelMapper.map(customer, CustomerDTO.class)).toList();
 	}
 
 	@Override
@@ -47,34 +43,33 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	/*
-	@Override
-	public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+	 * @Override public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO)
+	 * {
+	 * 
+	 * return customerRepo.findById(id).map(customer -> {
+	 * customer.setName(customerDTO.getName());
+	 * customer.setEmail(customerDTO.getEmail());
+	 * customer.setAddress(customerDTO.getAddress()); return
+	 * customerRepo.save(customer); }).map(cust -> modelMapper.map(cust,
+	 * CustomerDTO.class)).orElseThrow(() -> new CustomerNotFoundException(id));
+	 * 
+	 * 
+	 * }
+	 */
 
-		return customerRepo.findById(id).map(customer -> {
-			customer.setName(customerDTO.getName());
-			customer.setEmail(customerDTO.getEmail());
-			customer.setAddress(customerDTO.getAddress());
-			return customerRepo.save(customer);
-		}).map(cust -> modelMapper.map(cust, CustomerDTO.class)).orElseThrow(() -> new CustomerNotFoundException(id));
-
-		
-	}*/
-	
 	@Override
 	@Transactional
 	public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
-	    return customerRepo.findById(id)
-	    		.map(existingCustomer -> {
-	            existingCustomer.setName(customerDTO.getName());
-	            existingCustomer.setEmail(customerDTO.getEmail());
-	            existingCustomer.setNumber(customerDTO.getNumber());
-	            existingCustomer.setAddress(customerDTO.getAddress());
-	            
-	            // Save and return mapped DTO
-	            Customer updatedCustomer = customerRepo.save(existingCustomer);
-	            return modelMapper.map(updatedCustomer, CustomerDTO.class);
-	        })
-	        .orElseThrow(() -> new CustomerNotFoundException(id));
+		return customerRepo.findById(id).map(existingCustomer -> {
+			existingCustomer.setName(customerDTO.getName());
+			existingCustomer.setEmail(customerDTO.getEmail());
+			existingCustomer.setNumber(customerDTO.getNumber());
+			existingCustomer.setAddress(customerDTO.getAddress());
+
+			// Save and return mapped DTO
+			Customer updatedCustomer = customerRepo.save(existingCustomer);
+			return modelMapper.map(updatedCustomer, CustomerDTO.class);
+		}).orElseThrow(() -> new CustomerNotFoundException(id));
 	}
 
 	@Override
