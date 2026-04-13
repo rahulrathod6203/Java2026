@@ -22,5 +22,7 @@ public class CustomerDTO {
 	private String number;
 
 	private String address;
+	
+	private String password;
 
 }

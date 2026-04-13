@@ -35,5 +35,16 @@ public class Customer {
 	@Column( name = "customer_address")
 	private String address;
 	
+	@Column( name = "customer_password")
+	private String password;
+
+	public Customer(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
+	
+	
+	
 
 }

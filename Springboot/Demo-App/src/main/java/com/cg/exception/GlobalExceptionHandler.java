@@ -17,5 +17,12 @@ public class GlobalExceptionHandler {
 		return new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),
 				String.valueOf(HttpStatus.NOT_FOUND));
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(CustomerExistsException.class)
+	public ErrorDetails emailExistsHandler(CustomerExistsException exception, WebRequest request) {
+		return new ErrorDetails(LocalDateTime.now(), exception.getMessage(), request.getDescription(false),
+				String.valueOf(HttpStatus.BAD_REQUEST));
+	}
 
 }
