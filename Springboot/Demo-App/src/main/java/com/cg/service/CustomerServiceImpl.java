@@ -1,6 +1,7 @@
 package com.cg.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cg.dto.CustomerDTO;
 import com.cg.entity.Customer;
+import com.cg.exception.CustomerExistsException;
 import com.cg.exception.CustomerNotFoundException;
 import com.cg.repository.CustomerRepo;
 
@@ -37,25 +39,15 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional
 	public CustomerDTO addCustomer(CustomerDTO customerDTO) {
+
+		if (customerRepo.existsByEmail(customerDTO.getEmail())) {
+			throw new CustomerExistsException(customerDTO.getEmail());
+		}
+
 		Customer customerEntity = modelMapper.map(customerDTO, Customer.class);
 		Customer savedCustomer = customerRepo.save(customerEntity);
 		return modelMapper.map(savedCustomer, CustomerDTO.class);
 	}
-
-	/*
-	 * @Override public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO)
-	 * {
-	 * 
-	 * return customerRepo.findById(id).map(customer -> {
-	 * customer.setName(customerDTO.getName());
-	 * customer.setEmail(customerDTO.getEmail());
-	 * customer.setAddress(customerDTO.getAddress()); return
-	 * customerRepo.save(customer); }).map(cust -> modelMapper.map(cust,
-	 * CustomerDTO.class)).orElseThrow(() -> new CustomerNotFoundException(id));
-	 * 
-	 * 
-	 * }
-	 */
 
 	@Override
 	@Transactional
@@ -80,6 +72,35 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerRepo.deleteById(id);
 
+	}
+
+//	@Override
+//	public String authenticateCustomer(String email, String password) {
+//
+//		Optional<Customer> customer = customerRepo.findByEmail(email);
+//
+//		if (customer.isPresent()) {
+//			if (customer.get().getPassword().equals(password)) {
+//				return "Successfully Logged in!";
+//			} else {
+//				return "Invalid credentials!, please check your password!";
+//			}
+//		} else {
+//			throw new CustomerNotFoundException(email);
+//		}
+//
+//	}
+	
+	@Override
+	public String authenticateCustomer(String email, String password) {
+	    return customerRepo.findByEmail(email)
+	        .map(customer -> {
+	            if (customer.getPassword().equals(password)) {
+	                return "Successfully Logged in!";
+	            }
+	            return "Invalid password!, please check your password!";
+	        })
+	        .orElseThrow(() -> new CustomerNotFoundException(""));
 	}
 
 }

@@ -16,4 +16,7 @@ public interface CustomerService {
 	CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO);
 	
 	void deleteCustomer(Long id);
+	
+	
+	String authenticateCustomer(String email, String password);
 }
