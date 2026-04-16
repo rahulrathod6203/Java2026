@@ -3,6 +3,7 @@ package com.cg.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,21 +16,22 @@ import com.cg.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@CrossOrigin("http://localhost:5173")
 public class LoginRegisterController {
 
 	@Autowired
 	CustomerService customerService;
 
-	@GetMapping
-	public ResponseEntity<String> login(@RequestBody CustomerDTO customerDTO) {
+	@PostMapping("/login")
+	public ResponseEntity<Boolean> login(@RequestBody CustomerDTO customerDTO) {
 
-		String authenticatedCustomer = customerService.authenticateCustomer(customerDTO.getEmail(),
+		Boolean authenticateCustomer = customerService.authenticateCustomer(customerDTO.getEmail(),
 				customerDTO.getPassword());
 
-		return new ResponseEntity<String>(authenticatedCustomer, HttpStatus.OK);
+		return new ResponseEntity<>(authenticateCustomer, HttpStatus.OK);
 	}
 
-	@PostMapping
+	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody CustomerDTO customerDTO) {
 
 		customerService.addCustomer(customerDTO);

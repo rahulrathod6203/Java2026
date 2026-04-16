@@ -92,15 +92,16 @@ public class CustomerServiceImpl implements CustomerService {
 //	}
 	
 	@Override
-	public String authenticateCustomer(String email, String password) {
-	    return customerRepo.findByEmail(email)
-	        .map(customer -> {
-	            if (customer.getPassword().equals(password)) {
-	                return "Successfully Logged in!";
-	            }
-	            return "Invalid password!, please check your password!";
-	        })
-	        .orElseThrow(() -> new CustomerNotFoundException(""));
+	public Boolean authenticateCustomer(String email, String password) {
+	    Customer customer = customerRepo.findByEmail(email)
+	            .orElseThrow(() -> new CustomerNotFoundException(""));
+
+	    if (!customer.getPassword().equals(password)) {
+	        // You could throw an exception or return false here
+	        return false; 
+	    }
+
+	    return true;
 	}
 
 }

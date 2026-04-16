@@ -21,7 +21,7 @@ import com.cg.service.CustomerService;
 
 @RestController
 @RequestMapping("/api/v1/customers")
-@CrossOrigin("http://localhost:5173" + "")
+@CrossOrigin("http://localhost:5173")
 public class CustomerController {
 
 	@Autowired

@@ -10,7 +10,7 @@ public class CustomerNotFoundException extends RuntimeException {
 	}
 
 	public CustomerNotFoundException(String email) {
-		super("Invalid credentials!!! - ");
+		super("Invalid email or email doesn't exist!");
 		// TODO Auto-generated constructor stub
 	}
 
