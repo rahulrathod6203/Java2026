@@ -18,5 +18,5 @@ public interface CustomerService {
 	void deleteCustomer(Long id);
 	
 	
-	String authenticateCustomer(String email, String password);
+	Boolean authenticateCustomer(String email, String password);
 }
